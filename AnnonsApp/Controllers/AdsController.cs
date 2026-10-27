@@ -22,4 +22,61 @@ public class AdsController: ControllerBase
         var ads = await _context.Ads.ToListAsync();
         return Ok(ads);
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Ad>> GetById(int id)
+    {
+        var ad = await _context.Ads.FindAsync(id);
+        if (ad == null)
+        {
+            return NotFound();
+        }
+         return Ok(ad);
+    }
+    [HttpPost]
+    public async Task<ActionResult<Ad>>Create (Ad ad)
+    {
+        _context.Ads.Add(ad);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = ad.Id },
+            ad
+            );
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, Ad updatedAd)
+    {
+        var ad = await _context.Ads.FindAsync(id);
+
+        if(ad == null)
+        {
+            return NotFound();
+        }
+
+        ad.Title = updatedAd.Title;
+        ad.Description = updatedAd.Description;
+        ad.Price = updatedAd.Price;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var ad = await _context.Ads.FindAsync(id);
+
+        if (ad == null)
+        {
+            return NotFound();
+        }
+
+        _context.Ads.Remove(ad);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
