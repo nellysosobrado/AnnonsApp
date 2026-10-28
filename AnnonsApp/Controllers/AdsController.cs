@@ -34,8 +34,15 @@ public class AdsController: ControllerBase
          return Ok(ad);
     }
     [HttpPost]
-    public async Task<ActionResult<Ad>>Create (Ad ad)
+    public async Task<ActionResult<Ad>>Create (AdInput input)
     {
+        var ad = new Ad
+        {
+            Title = input.Title,
+            Description = input.Description,
+            Price = input.Price
+        };
+
         _context.Ads.Add(ad);
         await _context.SaveChangesAsync();
 
@@ -44,6 +51,7 @@ public class AdsController: ControllerBase
             new { id = ad.Id },
             ad
             );
+ 
     }
 
     [HttpPut("{id}")]
