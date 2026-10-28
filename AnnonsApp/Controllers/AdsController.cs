@@ -47,7 +47,7 @@ public class AdsController: ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Ad updatedAd)
+    public async Task<IActionResult> Update(int id, AdInput updatedAd)
     {
         var ad = await _context.Ads.FindAsync(id);
 
