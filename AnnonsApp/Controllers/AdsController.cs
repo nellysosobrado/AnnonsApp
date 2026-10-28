@@ -72,7 +72,47 @@ public class AdsController: ControllerBase
 
         return NoContent();
     }
-    [HttpDelete("{id}")]
+
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(int id, AdPatchInput input)
+    {
+        if(input.Title != null && string.IsNullOrWhiteSpace(input.Title))
+        {
+            return BadRequest("Title får inte vara tom.");
+
+        }
+        if(input.Description != null && string.IsNullOrWhiteSpace(input.Description))
+        {
+            ModelState.AddModelError("Description", "Beskrivningen får inte vara tom");
+        }
+
+        var ad = await _context.Ads.FindAsync(id);
+
+        if(ad == null)
+        {
+            return NotFound();
+        }
+
+        if(input.Title != null)
+        {
+            ad.Title = input.Title;
+        }
+
+        if(input.Description != null)
+        {
+            ad.Description = input.Description;
+        }
+
+        if(input.Price.HasValue)
+        {
+            ad.Price = input.Price.Value;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
     public async Task<IActionResult> Delete(int id)
     {
         var ad = await _context.Ads.FindAsync(id);
