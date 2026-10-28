@@ -1,10 +1,41 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Annonser";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="mb-4">
+    <h1>Hitta ditt nästa fynd</h1>
+    <p class="text-muted">Upptäck saker som kan få ett nytt hem.</p>
 </div>
+
+@if (Model.Ads.Count == 0)
+{
+    <div class="alert alert-info">
+        Det finns inga annonser ännu.
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var ad in Model.Ads)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5 card-title">@ad.Title</h2>
+
+                        <p class="card-text">@ad.Description</p>
+
+                        <p class="fw-bold fs-5 mb-0">
+                            @ad.Price.ToString(
+                                "N0",
+                                System.Globalization.CultureInfo.GetCultureInfo("sv-SE")
+                            ) kr
+                        </p>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+}
